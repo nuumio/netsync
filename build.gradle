@@ -15,10 +15,21 @@
  */
 
 group 'fi.nuumio'
-version '0.1-SNAPSHOT'
+def versionStr = '0.1'
+version "$versionStr"
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 // For Android compatibility:
 targetCompatibility = '1.7'
@@ -92,6 +103,21 @@ publishing {
                     }
                 }
             }
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['NetSyncPublication']
+    pkg {
+        repo = 'maven-public'
+        name = project.getName()
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/nuumio/netsync.git'
+        version {
+            name = versionStr
         }
     }
 }
